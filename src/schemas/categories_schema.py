@@ -1,4 +1,5 @@
-from marshmallow import Schema, fields, INCLUDE
+from marshmallow import Schema, fields, INCLUDE, post_load
+from model.categories_model import ExpenseCategoriesModel
 
 
 class ExpenseCategoriesSchema(Schema):
@@ -6,4 +7,8 @@ class ExpenseCategoriesSchema(Schema):
         unknown = INCLUDE
     category = fields.Str()
     val = fields.List(fields.Str())
+
+    @post_load
+    def return_obj(self, data, **kwargs):
+        return ExpenseCategoriesModel(**data)
 
