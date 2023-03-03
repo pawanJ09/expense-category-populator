@@ -23,10 +23,10 @@ pip install -r requirements.txt
 You can run the main.py program to get started. This file has the __main__ method.
 
 ```shell
-python3 ./src/main.py
+python3 main.py
 ```
 OR
 ```shell
-python ./src/main.py
+python main.py
 ```
 
