@@ -1,0 +1,33 @@
+name: Docker Image Build & Push
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build-push:
+    runs-on: ubuntu-latest
+    env:
+      DOCKER_USER: ${{vars.DOCKER_USER}}
+      DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - name: Set CURR_DTTM
+      id: set-curr-dttm
+      run: |
+        curr_dttm=$(date +%Y%m%d_%H%M%S)
+        echo "curr_dttm=$curr_dttm" >> $GITHUB_OUTPUT
+    - name: Docker Login
+      run: |
+        docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
+    - name: Build Docker Image
+      run: |
+        docker build . --file Dockerfile --tag $DOCKER_USER/expense-category-populator:${{steps.set-curr-dttm.outputs.curr_dttm}}
+        docker tag $DOCKER_USER/expense-category-populator:${{steps.set-curr-dttm.outputs.curr_dttm}} $DOCKER_USER/expense-category-populator:latest
+    - name: Check Images
+      run: docker images
+    - name: Push Docker Image
+      run: |
+        docker push $DOCKER_USER/expense-category-populator:${{steps.set-curr-dttm.outputs.curr_dttm}}
+        docker push $DOCKER_USER/expense-category-populator:latest
