@@ -13,6 +13,7 @@ def health_check():
 
 @app.route('/categories', methods=['GET'])
 def get_all_categories():
+    print('Fetching all categories')
     all_categories = ExpenseCategoriesModel.fetch_all()
     if all_categories and all_categories['Items']:
         return ecs.dump(all_categories['Items']), 200
